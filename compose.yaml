@@ -46,77 +46,77 @@ services:
   #- 9092:9092
   #- 9094:9094
 
-  pg-db:
-    container_name: pg-db
-    profiles:
-      - prod
-      - dev
-    build:
-      context: .
-      dockerfile: postgres/Dockerfile
-    env_file: .env
-    ports:
-      - 5432:5432
-    volumes:
-      - pg-data:/var/lib/postgresql/data
-  pgadmin4:
-    container_name: pgadmin4
-    profiles:
-      - prod
-      - dev
-    build:
-      context: .
-      dockerfile: pgadmin4/Dockerfile
-    env_file: .env
-    ports:
-      - 5434:80
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    depends_on:
-      - pg-db
-  db:
-    container_name: db
-    profiles:
-      - prod
-      - dev
-    build:
-      context: .
-      dockerfile: mariadb/Dockerfile
-    env_file:
-      - ./.env
-    ports:
-      - 3306:3306
-    volumes:
-      - ../data/mysql:/var/lib/mysql
-  phpmyadmin:
-    container_name: phpmyadmin
-    profiles:
-      - prod
-      - dev
-    build:
-      context: .
-      dockerfile: phpmyadmin/Dockerfile
-    ports:
-      - 3308:80
-    env_file:
-      - ./.env
-    depends_on:
-      - db
-  edb-mail-server:
-    container_name: edb-mail-server
-    profiles:
-      - mailer
-      - prod
-      - dev
-    build:
-      context: .
-      ssh:
-        - default
-      dockerfile: edb-mail-server/Dockerfile
-    env_file:
-      - ./.env
-    volumes:
-      - logs:/app/logs
+  # pg-db:
+  #   container_name: pg-db
+  #   profiles:
+  #     - prod
+  #     - dev
+  #   build:
+  #     context: .
+  #     dockerfile: postgres/Dockerfile
+  #   env_file: .env
+  #   ports:
+  #     - 5432:5432
+  #   volumes:
+  #     - pg-data:/var/lib/postgresql/data
+  # pgadmin4:
+  #   container_name: pgadmin4
+  #   profiles:
+  #     - prod
+  #     - dev
+  #   build:
+  #     context: .
+  #     dockerfile: pgadmin4/Dockerfile
+  #   env_file: .env
+  #   ports:
+  #     - 5434:80
+  #   volumes:
+  #     - pgadmin-data:/var/lib/pgadmin
+  #   depends_on:
+  #     - pg-db
+  # db:
+  #   container_name: db
+  #   profiles:
+  #     - prod
+  #     - dev
+  #   build:
+  #     context: .
+  #     dockerfile: mariadb/Dockerfile
+  #   env_file:
+  #     - ./.env
+  #   ports:
+  #     - 3306:3306
+  #   volumes:
+  #     - ../data/mysql:/var/lib/mysql
+  # phpmyadmin:
+  #   container_name: phpmyadmin
+  #   profiles:
+  #     - prod
+  #     - dev
+  #   build:
+  #     context: .
+  #     dockerfile: phpmyadmin/Dockerfile
+  #   ports:
+  #     - 3308:80
+  #   env_file:
+  #     - ./.env
+  #   depends_on:
+  #     - db
+  # edb-mail-server:
+  #   container_name: edb-mail-server
+  #   profiles:
+  #     - mailer
+  #     - prod
+  #     - dev
+  #   build:
+  #     context: .
+  #     ssh:
+  #       - default
+  #     dockerfile: edb-mail-server/Dockerfile
+  #   env_file:
+  #     - ./.env
+  #   volumes:
+  #     - logs:/app/logs
   edb-server:
     container_name: edb-server
     profiles:
@@ -139,8 +139,8 @@ services:
     volumes:
       #- ./bin:/app/bin:ro
       - ./config:/app/config:ro
-      - ../data:/app/data
-      - logs:/app/logs
+      - ./data:/app/data
+      - ./data/logs:/app/logs
       - ./jwtRS256.key:/app/jwtRS256.key:ro
       - ./jwtRS256.key.pub:/app/jwtRS256.key.pub:ro
       - ./jwt.es256.private.pem:/app/jwt.es256.private.pem:ro
@@ -178,7 +178,7 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus-data:/prometheus
+      - ./data/prometheus:/prometheus
     ports:
       - "9090:9090"
     depends_on:
@@ -194,10 +194,10 @@ services:
     depends_on:
       - prometheus
     volumes:
-      - grafana-data:/var/lib/grafana
+      - ./data/grafana:/var/lib/grafana
 volumes:
   pg-data:
   pgadmin-data:
-  grafana-data:
+  # grafana-data:
   prometheus-data:
-  logs:
+  # logs:
