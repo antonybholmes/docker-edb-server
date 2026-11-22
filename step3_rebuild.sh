@@ -16,8 +16,8 @@ source .env
 set +o allexport
 
 # start postgres
-docker-compose up -d --no-deps --build pg-db
-docker-compose up -d --no-deps --build pgadmin4
+#docker-compose up -d --no-deps --build pg-db
+#docker-compose up -d --no-deps --build pgadmin4
 
 # start mariadb
 #docker-compose up -d --no-deps --build db
@@ -41,8 +41,8 @@ docker restart valkey
 
 # start mail service
 #docker-compose up -d --no-cache --no-deps --build edb-mail-server
-docker-compose build --no-cache edb-mail-server
-docker-compose up -d --no-deps edb-mail-server
+#docker-compose build --no-cache edb-mail-server
+#docker-compose up -d --no-deps edb-mail-server
 
 # start the server force rebuild
 # make config available for access rules
@@ -52,18 +52,17 @@ docker-compose up -d --no-deps edb-mail-server
 
 # needs config/ directory with access-rules.json and app.yaml as 
 # this is mounted into the container
-docker-compose build --no-cache edb-server
-
+ 
 # Start only the specified service(s) without starting dependent services
-docker-compose up -d --no-deps edb-server
+docker compose up -d --no-deps --build edb-server
 
 # start nginx
-docker-compose up -d --no-deps --build nginx
+docker compose up -d --no-deps --build nginx
 
-docker-compose up -d --no-deps --build otel-collector
+docker compose up -d --no-deps --build otel-collector
 
-docker-compose up -d --no-deps --build prometheus
+docker compose up -d --no-deps --build prometheus
 
-docker-compose up -d --no-deps --build grafana
+docker compose up -d --no-deps --build grafana
 
 
