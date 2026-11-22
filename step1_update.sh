@@ -33,11 +33,14 @@ git pull
 
 # for storing trace data
 
-mkdir -p ../data/grafana
-sudo chown -R 472:472 ../data/grafana
+# link root volume to local data directory
+ln -s /data ./data
 
-mkdir -p ../data/prometheus
-sudo chown -R 65534:65534 ../data/prometheus
+mkdir -p ./data/grafana
+sudo chown -R 472:472 ./data/grafana
+
+mkdir -p ./data/prometheus
+sudo chown -R 65534:65534 ./data/prometheus
 
 #eval "$(ssh-agent -s)"
 #ssh-add ~/.ssh/id_ed25519

@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1.4
-
 FROM golang:1.27.4-trixie AS build-stage
 
 # RUN apk update
@@ -37,7 +35,7 @@ RUN mkdir -p /root/.ssh && \
 
 # get the repositories we need
 RUN --mount=type=ssh \
-git clone git@github.com:antonybholmes/go-edbserver-gin.git && \
+git clone git@github.com:antonybholmes/go-edb-server.git && \
 git clone git@github.com:antonybholmes/go-edb-mail-server.git && \
 git clone git@github.com:antonybholmes/go-mail.git && \
 git clone git@github.com:antonybholmes/go-jobs.git && \
