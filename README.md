@@ -1,4 +1,4 @@
-# docker-go-edb-server
+# docker-edb-server
 
 Contains the Dockerfiles and scripts to start the EDB server app.
 
@@ -8,4 +8,4 @@ Contains the Dockerfiles and scripts to start the EDB server app.
 2. `compose.yaml` contains the docker compose details needed to build the separate images.
 3. The app requires a pair of public and private RSA keys for signing JWTs. It will look for `jwtRS256.key` and if not found will create the keys for you, otherwise you need to supply your own.
 
-# docker-go-edb-server
+# docker-edb-server
