@@ -5,7 +5,7 @@ FROM golang:1.27.4-trixie AS build-stage
 # RUN apk update
 # RUN apk add -U --no-cache ca-certificates && update-ca-certificates
 
-WORKDIR /
+WORKDIR /app
 
 # ADD src/go-edbserver-gin/ go-edbserver-gin/
 # ADD src/go-dna/ go-dna/
@@ -37,9 +37,10 @@ RUN mkdir -p /root/.ssh && \
 
 # get the repositories we need
 RUN --mount=type=ssh \
-git clone git@github.com:antonybholmes/go-mail.git && \
 git clone git@github.com:antonybholmes/go-edbserver-gin.git && \
-git clone git@github.com:antonybholmes/go-edbmailserver.git && \
+git clone git@github.com:antonybholmes/go-edb-mail-server.git && \
+git clone git@github.com:antonybholmes/go-mail.git && \
+git clone git@github.com:antonybholmes/go-jobs.git && \
 git clone git@github.com:antonybholmes/go-dna.git && \
 git clone git@github.com:antonybholmes/go-genome.git && \
 git clone git@github.com:antonybholmes/go-web.git && \
@@ -55,14 +56,11 @@ git clone git@github.com:antonybholmes/go-cytobands.git && \
 git clone git@github.com:antonybholmes/go-hubs.git && \ 
 git clone git@github.com:antonybholmes/go-scrna.git
 
-# change to directory of our app to build
-WORKDIR /edbserver-gin
-
 RUN go mod tidy
 
 # build statically so runs without dependencies
 #RUN CGO_ENABLED=1 GOOS=linux BUILD=production go build --tags "fts5" -o edbserver
-RUN GIN_MODE=release CGO_ENABLED=1 GOOS=linux BUILD=production go build --tags "fts5" -o edbserver
+RUN GIN_MODE=release CGO_ENABLED=1 GOOS=linux BUILD=production go build --tags "fts5" -o edb-server
 
 
 # move app into smaller alpine image using debian bookworm stable
@@ -86,14 +84,14 @@ COPY --chmod=755 bin/ /app/bin/
 # https://stackoverflow.com/questions/52969195/docker-container-running-golang-http-client-getting-error-certificate-signed-by
 COPY --from=build-stage /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-COPY --from=build-stage /edbserver-gin/edbserver edbserver
+COPY --from=build-stage /app/edb-server edb-server
 
 # aux files needed by app
-# COPY --from=build-stage /edbserver-gin/templates/ /templates
-# COPY --from=build-stage /edbserver-gin/consts.env /
-COPY --from=build-stage /edbserver-gin/version.json version.json
-#COPY --from=build-stage /edbserver-gin/config/access-rules.json config/access-rules.json
-#COPY --from=build-stage /edbserver-gin/config/app.yaml config/app.yaml
+# COPY --from=build-stage /app/templates/ /templates
+# COPY --from=build-stage /app/consts.env /
+COPY --from=build-stage /app/version.json version.json
+#COPY --from=build-stage /app/config/access-rules.json config/access-rules.json
+#COPY --from=build-stage /app/config/app.yaml config/app.yaml
 
 # COPY .env /
 
@@ -106,5 +104,5 @@ COPY --from=build-stage /edbserver-gin/version.json version.json
 # default port
 EXPOSE 8080
 
-# CMD ["./edbserver"]
-CMD GIN_MODE=release BUILD=production ./edbserver
+# CMD ["./edb-server"]
+CMD GIN_MODE=release BUILD=production ./edb-server
