@@ -28,7 +28,7 @@ services:
     volumes:
       - ./valkey/valkey.conf:/usr/local/etc/valkey/valkey.conf:ro
     ports:
-      - 6379:6379
+      - "6379:6379"
   #kafka:
   #container_name: kafka
   #image: bitnami/kafka:latest
@@ -135,7 +135,7 @@ services:
       - ./.env
       - ./consts.env
     ports:
-      - 8080:8080
+      - "8080:8080"
     volumes:
       #- ./bin:/app/bin:ro
       - ./config:/app/config:ro
@@ -157,7 +157,7 @@ services:
       context: .
       dockerfile: nginx/Dockerfile
     ports:
-      - 80:80
+      - "80:80"
 
   otel-collector:
     container_name: otel

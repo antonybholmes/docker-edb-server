@@ -33,7 +33,7 @@ set +o allexport
 # start redis
 # do some env sub so we can add password without storing it
 envsubst < valkey/valkey.template.conf > valkey/valkey.conf
-docker-compose up -d --no-deps --remove-orphans  --build valkey 
+docker compose up -d --no-deps --remove-orphans  --build valkey 
 # clear it if not being rebuilt
 docker restart valkey
 
@@ -56,7 +56,7 @@ docker restart valkey
 # Start only the specified service(s) without starting dependent services
 docker compose up -d --no-deps --build edb-server
 
-# start nginx
+# start nginx after rebuilding edb-server
 docker compose up -d --no-deps --build nginx
 
 docker compose up -d --no-deps --build otel-collector
