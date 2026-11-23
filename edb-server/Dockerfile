@@ -62,7 +62,7 @@ RUN GIN_MODE=release CGO_ENABLED=1 GOOS=linux BUILD=production go build --tags "
 
 
 # move app into smaller alpine image using debian bookworm stable
-FROM debian:trixie-slim AS release-stage
+FROM debian:trixie-20261104-slim AS release-stage
 
 
 # Install tabix and clean up package indices to keep the image lean
@@ -82,12 +82,12 @@ COPY --chmod=755 bin/ /app/bin/
 # https://stackoverflow.com/questions/52969195/docker-container-running-golang-http-client-getting-error-certificate-signed-by
 COPY --from=build-stage /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-COPY --from=build-stage /app/edb-server edb-server
+COPY --from=build-stage /app/edb-server ./edb-server
 
 # aux files needed by app
 # COPY --from=build-stage /app/templates/ /templates
 # COPY --from=build-stage /app/consts.env /
-COPY --from=build-stage /app/version.json version.json
+COPY --from=build-stage /app/version.json ./version.json
 #COPY --from=build-stage /app/config/access-rules.json config/access-rules.json
 #COPY --from=build-stage /app/config/app.yaml config/app.yaml
 
