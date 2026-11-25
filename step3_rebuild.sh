@@ -5,12 +5,6 @@
 #docker image rm docker-rust-edb-api-web
 #docker-compose up -d
 
-# generate keys if they don't exist
-if [[ ! -f "jwtRS256.key" ]]
-then
-	./create_rsa_keys.sh
-fi
-
 set -o allexport
 source .env
 set +o allexport
@@ -32,10 +26,10 @@ set +o allexport
 
 # start redis
 # do some env sub so we can add password without storing it
-envsubst < valkey/valkey.template.conf > valkey/valkey.conf
-docker compose up -d --no-deps --remove-orphans  --build valkey 
+#envsubst < valkey/valkey.template.conf > valkey/valkey.conf
+#docker compose up -d --no-deps --remove-orphans  --build valkey 
 # clear it if not being rebuilt
-docker restart valkey
+#docker restart valkey
 
 #docker-compose up -d --no-deps --build kafka
 

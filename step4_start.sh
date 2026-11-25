@@ -20,7 +20,7 @@ set +o allexport
 #docker restart pgadmin4
  
 # clear it if not being rebuilt
-docker restart valkey
+#docker restart valkey
 
 #docker-compose up -d --no-deps --build kafka
 
